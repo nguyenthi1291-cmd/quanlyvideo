@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Account Settings — Video Admin</title>
+  <link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/variables.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/admin.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <!-- Supabase JS Client CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <div class="admin-layout">
+    <aside class="sidebar" id="app-sidebar"></aside>
+
+    <div class="main-wrapper">
+      <header class="topbar" id="app-topbar"></header>
+
+      <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+          <div>
+            <h1 class="page-header-title">Account Settings</h1>
+            <p class="page-header-subtitle">Manage your personal profile, credentials, and Supabase connection</p>
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: var(--space-6);">
+          <!-- Profile Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Profile Information</h3>
+              <div id="account-role-badge"></div>
+            </div>
+
+            <form id="profile-form">
+              <div class="form-group">
+                <label class="form-label" for="account-username">
+                  <span>Username</span>
+                  <span class="required">*</span>
+                </label>
+                <input type="text" id="account-username" class="form-input" required>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="account-email">
+                  <span>Email Address</span>
+                </label>
+                <input type="email" id="account-email" class="form-input" readonly disabled style="background-color: var(--color-bg-tertiary); cursor: not-allowed;">
+                <span class="form-hint">Email is managed by Supabase Authentication</span>
+              </div>
+
+              <div class="form-group">
+                <span class="form-label">Member Since</span>
+                <span class="text-sm font-medium" id="account-created-at">—</span>
+              </div>
+
+              <div class="mt-6 pt-4 flex justify-end" style="border-top: 1px solid var(--color-border);">
+                <button type="submit" id="btn-save-profile" class="btn btn-primary">Save Changes</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Password Card -->
+          <div class="card">
+            <div class="card-header">
+              <h3 class="card-title">Change Password</h3>
+            </div>
+
+            <form id="password-form">
+              <div class="form-group">
+                <label class="form-label" for="account-new-password">
+                  <span>New Password</span>
+                  <span class="required">*</span>
+                </label>
+                <input type="password" id="account-new-password" class="form-input" placeholder="At least 6 characters" required autocomplete="new-password">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="account-confirm-password">
+                  <span>Confirm New Password</span>
+                  <span class="required">*</span>
+                </label>
+                <input type="password" id="account-confirm-password" class="form-input" placeholder="••••••••" required autocomplete="new-password">
+              </div>
+
+              <div class="mt-6 pt-4 flex justify-end" style="border-top: 1px solid var(--color-border);">
+                <button type="submit" id="btn-change-password" class="btn btn-primary">Update Password</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Supabase Config & Integration Card -->
+          <div class="card" style="grid-column: 1 / -1;">
+            <div class="card-header">
+              <h3 class="card-title">Supabase Project Connection</h3>
+              <span class="badge badge-success"><span class="badge-dot"></span>Connected</span>
+            </div>
+
+            <form id="config-form">
+              <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: var(--space-4);">
+                <div class="form-group">
+                  <label class="form-label" for="account-project-url">Project URL</label>
+                  <input type="text" id="account-project-url" class="form-input font-mono text-xs" readonly disabled style="background-color: var(--color-bg-tertiary);">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="account-anon-key">Public Anon Key (Browser Storage Fallback)</label>
+                  <input type="text" id="account-anon-key" class="form-input font-mono text-xs" placeholder="Paste your Supabase Anon Key here if updating">
+                </div>
+              </div>
+
+              <div class="mt-4 flex items-center justify-between">
+                <span class="text-xs text-muted">Never insert the private <code>service_role</code> key into the frontend.</span>
+                <button type="submit" class="btn btn-secondary btn-sm">Save Key to Browser</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/config.js"></script>
+  <script src="js/supabase.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/guard.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/account.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      const authData = await window.Guard.requireAuth();
+      if (!authData) return;
+
+      window.Layout.init('account');
+      await window.Account.init();
+    });
+  </script>
+</body>
+</html>
